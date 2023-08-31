@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import vn.edu.vtiacademy.demolesson7.controller.DepartmentFilter;
+import vn.edu.vtiacademy.demolesson7.model.Address;
 import vn.edu.vtiacademy.demolesson7.model.Department;
 import vn.edu.vtiacademy.demolesson7.model.DepartmentExistedException;
 import vn.edu.vtiacademy.demolesson7.model.DepartmentNotFoundException;
@@ -56,5 +57,16 @@ public class DomainDepartmentServiceImpl implements DepartmentService {
     @Override
     public void deleteDepartment(Long id) {
         departmentRepository.deleteById(id);
+    }
+
+    @Override
+    public Department addAddress(Long id, Address address) {
+        var department = findById(id);
+
+        department.getAddresses().add(address);
+
+        address.setDepartment(department);
+
+        return departmentRepository.save(department);
     }
 }

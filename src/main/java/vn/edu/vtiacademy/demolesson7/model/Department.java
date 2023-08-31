@@ -7,11 +7,9 @@ import org.hibernate.proxy.HibernateProxy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import vn.edu.vtiacademy.demolesson7.controller.DepartmentReq;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Function;
 
 @Table(name = "departments")
@@ -33,6 +31,10 @@ public class Department {
 
     String description;
 
+    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    List<Address> addresses = new ArrayList<>();
+
     @CreatedDate
     OffsetDateTime createdAt;
 
@@ -47,8 +49,8 @@ public class Department {
     public final boolean equals(Object o) {
         if (this == o) return true;
         if (o == null) return false;
-        Class<?> oEffectiveClass = o instanceof HibernateProxy hp? hp.getHibernateLazyInitializer().getPersistentClass() : o.getClass();
-        Class<?> thisEffectiveClass = this instanceof HibernateProxy hp? hp.getHibernateLazyInitializer().getPersistentClass() : this.getClass();
+        Class<?> oEffectiveClass = o instanceof HibernateProxy hp ? hp.getHibernateLazyInitializer().getPersistentClass() : o.getClass();
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy hp ? hp.getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
         Department that = (Department) o;
         return getId() != null && Objects.equals(getId(), that.getId());
@@ -56,6 +58,6 @@ public class Department {
 
     @Override
     public final int hashCode() {
-        return this instanceof HibernateProxy hp? hp.getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
+        return this instanceof HibernateProxy hp ? hp.getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
     }
 }

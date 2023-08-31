@@ -4,11 +4,17 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.proxy.HibernateProxy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.OffsetDateTime;
 import java.util.Objects;
+import java.util.function.Function;
 
 @Table(name = "addresses")
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Builder
 @AllArgsConstructor
 @Getter
@@ -24,6 +30,20 @@ public class Address {
     String street;
 
     String city;
+
+    @ManyToOne
+    @JoinColumn(name = "department_id", nullable = false)
+    Department department;
+
+    @CreatedDate
+    OffsetDateTime createdAt;
+
+    @LastModifiedDate
+    OffsetDateTime updatedAt;
+
+    public <R> R transform(Function<? super Address, ? extends R> func) {
+        return func.apply(this);
+    }
 
     @Override
     public final boolean equals(Object o) {
