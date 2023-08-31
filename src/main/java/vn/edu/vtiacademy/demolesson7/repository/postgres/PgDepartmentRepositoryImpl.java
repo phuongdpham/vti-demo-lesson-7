@@ -43,4 +43,9 @@ public class PgDepartmentRepositoryImpl implements DepartmentRepository {
     public void deleteById(Long id) {
         repository.deleteById(id);
     }
+
+    @Override
+    public boolean existsByName(String name) {
+        return repository.existsByName(name);
+    }
 }

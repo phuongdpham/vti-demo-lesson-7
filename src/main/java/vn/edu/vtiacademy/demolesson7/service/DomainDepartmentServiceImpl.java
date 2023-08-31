@@ -26,8 +26,7 @@ public class DomainDepartmentServiceImpl implements DepartmentService {
 
     @Override
     public Department createDepartment(Department department) {
-        var existingDepartment = departmentRepository.findByName(department.getName());
-        if (existingDepartment.isPresent()) {
+        if (departmentRepository.existsByName(department.getName())) {
             throw new DepartmentExistedException(HttpStatus.CONFLICT.value(), "C2", "Department with name=" + department.getName() + " already exists");
         }
         return departmentRepository.save(department);

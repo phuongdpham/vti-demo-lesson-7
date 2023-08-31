@@ -18,41 +18,52 @@ import vn.edu.vtiacademy.demolesson7.service.DepartmentService;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class DepartmentController {
     DepartmentService departmentService;
+    DepartmentMapper mapper;
 
     @GetMapping
-    public Page<Department> findAll(@ModelAttribute DepartmentFilter filter, Pageable pageable) {
-        return departmentService.findAll(filter, pageable);
+    public Page<DepartmentResp> findAll(@ModelAttribute DepartmentFilter filter, Pageable pageable) {
+        return departmentService.findAll(filter, pageable)
+                .map(mapper::toDepartmentResp);
     }
 
     @PostMapping
-    public Department createDepartment(@RequestBody DepartmentReq req) {
-        var department = toModel(req);
-        return departmentService.createDepartment(department);
+    public DepartmentResp createDepartment(@RequestBody DepartmentReq req) {
+        return req.transform(mapper::toDepartment)
+                .transform(departmentService::createDepartment)
+                .transform(mapper::toDepartmentResp);
+//        var department = mapper.toDepartment(req);
+//
+//        var result = departmentService.createDepartment(department);
+//
+//        return mapper.toDepartmentResp(result);
     }
 
     @GetMapping("{id}")
-    public Department findById(@PathVariable Long id) {
-        var resp = departmentService.findById(id);
-        log.info("Found department: {}", resp.getId());
-        return resp;
+    public DepartmentResp findById(@PathVariable Long id) {
+        return departmentService.findById(id)
+                .transform(resp -> {
+                    log.info("Found department: {}", resp.getId());
+                    return resp;
+                })
+                .transform(mapper::toDepartmentResp);
+
+//        var resp = departmentService.findById(id);
+//        log.info("Found department: {}", resp.getId());
+//        return mapper.toDepartmentResp(resp);
     }
 
     @PatchMapping("{id}")
-    public Department updateDepartment(@PathVariable Long id, @RequestBody DepartmentReq req) {
+    public DepartmentResp updateDepartment(@PathVariable Long id, @RequestBody DepartmentReq req) {
+        return mapper.toDepartment(req)
+                .transform(department -> departmentService.updateDepartment(id, department))
+                .transform(mapper::toDepartmentResp);
 
-        return departmentService.updateDepartment(id, toModel(req));
+//        return departmentService.updateDepartment(id, mapper.toDepartment(req));
     }
 
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteDepartment(@PathVariable Long id) {
         departmentService.deleteDepartment(id);
-    }
-
-    private Department toModel(DepartmentReq req) {
-        return Department.builder()
-                .name(req.name())
-                .description(req.description())
-                .build();
     }
 }

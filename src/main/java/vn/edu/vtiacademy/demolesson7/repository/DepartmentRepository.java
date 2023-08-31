@@ -17,4 +17,6 @@ public interface DepartmentRepository {
     Optional<Department> findByName(String name);
 
     void deleteById(Long id);
+
+    boolean existsByName(String name);
 }

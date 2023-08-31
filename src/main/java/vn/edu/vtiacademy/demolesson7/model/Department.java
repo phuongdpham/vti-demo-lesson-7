@@ -4,11 +4,19 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.proxy.HibernateProxy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import vn.edu.vtiacademy.demolesson7.controller.DepartmentReq;
 
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Objects;
+import java.util.function.Function;
 
 @Table(name = "departments")
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Builder
 @AllArgsConstructor
 @Getter
@@ -24,6 +32,16 @@ public class Department {
     String name;
 
     String description;
+
+    @CreatedDate
+    OffsetDateTime createdAt;
+
+    @LastModifiedDate
+    OffsetDateTime updatedAt;
+
+    public <R> R transform(Function<? super Department, ? extends R> func) {
+        return func.apply(this);
+    }
 
     @Override
     public final boolean equals(Object o) {
