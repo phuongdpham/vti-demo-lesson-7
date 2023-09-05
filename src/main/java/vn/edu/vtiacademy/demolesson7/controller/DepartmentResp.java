@@ -1,6 +1,7 @@
 package vn.edu.vtiacademy.demolesson7.controller;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import vn.edu.vtiacademy.demolesson7.model.Metadata;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -13,6 +14,7 @@ public record DepartmentResp(
         OffsetDateTime createdAt,
         OffsetDateTime updatedAt,
         List<AddressResp> addresses,
-        Set<EmployeeResp> employees
+        Set<EmployeeResp> employees,
+        Metadata metadata
 ) {
 }

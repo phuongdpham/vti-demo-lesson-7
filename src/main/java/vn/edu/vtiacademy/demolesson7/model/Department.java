@@ -3,7 +3,9 @@ package vn.edu.vtiacademy.demolesson7.model;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.proxy.HibernateProxy;
+import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -51,6 +53,9 @@ public class Department {
 
     @LastModifiedDate
     OffsetDateTime updatedAt;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    Metadata metadata;
 
     public <R> R transform(Function<? super Department, ? extends R> func) {
         return func.apply(this);
