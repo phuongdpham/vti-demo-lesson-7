@@ -25,7 +25,11 @@ public class DomainDepartmentServiceImpl implements DepartmentService {
     @Override
     public Department createDepartment(Department department) {
         if (departmentRepository.existsByName(department.getName())) {
-            throw new DepartmentExistedException(HttpStatus.CONFLICT.value(), "C2", "Department with name=" + department.getName() + " already exists");
+            throw new DepartmentExistedException(
+                    HttpStatus.CONFLICT.value(),
+                    "C2",
+                    "Department with name=" + department.getName() + " already exists"
+            );
         }
         return departmentRepository.save(department);
     }
@@ -33,7 +37,11 @@ public class DomainDepartmentServiceImpl implements DepartmentService {
     @Override
     public Department findById(Long id) {
         return departmentRepository.findById(id)
-                .orElseThrow(() -> new DepartmentNotFoundException(HttpStatus.NOT_FOUND.value(), "C1", "Department not found with given id=" + id));
+                .orElseThrow(() -> new DepartmentNotFoundException(
+                        HttpStatus.NOT_FOUND.value(),
+                        "C1",
+                        "Department not found with given id=" + id)
+                );
     }
 
     @Override

@@ -68,7 +68,7 @@ public final class DepartmentSpecification {
         if (description == null) {
             return null;
         }
-        return (root, query, builder) -> builder.like(root.get("description"), description + "%");
+        return (root, query, builder) -> builder.like(root.get("description"), "%" + description + "%");
     }
 
     private static Specification<Department> withName(String name) {
