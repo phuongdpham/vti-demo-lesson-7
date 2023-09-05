@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import vn.edu.vtiacademy.demolesson7.controller.DepartmentFilter;
 import vn.edu.vtiacademy.demolesson7.model.Address;
 import vn.edu.vtiacademy.demolesson7.model.Department;
+import vn.edu.vtiacademy.demolesson7.model.Employee;
 
 public interface DepartmentService {
     Page<Department> findAll(DepartmentFilter filter, Pageable pageable);
@@ -18,4 +19,6 @@ public interface DepartmentService {
     void deleteDepartment(Long id);
 
     Department addAddress(Long id, Address address);
+
+    Department addEmployee(Long id, Employee employee);
 }

@@ -7,6 +7,8 @@ import org.springframework.data.jpa.domain.Specification;
 import vn.edu.vtiacademy.demolesson7.controller.DepartmentFilter;
 import vn.edu.vtiacademy.demolesson7.model.Department;
 
+import java.time.LocalDate;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class DepartmentSpecification {
     public static Specification<Department> withFilter(DepartmentFilter filter) {
@@ -14,7 +16,25 @@ public final class DepartmentSpecification {
                 .and(withDescription(filter.description()))
                 .and(withMinId(filter.minId()))
                 .and(withMaxId(filter.maxId()))
-                .and(withStreetStartWith(filter.streetStartWith()));
+                .and(withStreetStartWith(filter.streetStartWith()))
+                .and(withFromDate(filter.fromDate()))
+                .and(withToDate(filter.toDate()));
+    }
+
+    private static Specification<Department> withToDate(LocalDate toDate) {
+        if (toDate == null) {
+            return null;
+        }
+
+        return (root, query, builder) -> builder.lessThan(root.get("createdAt"), toDate);
+    }
+
+    private static Specification<Department> withFromDate(LocalDate fromDate) {
+        if (fromDate == null) {
+            return null;
+        }
+
+        return (root, query, builder) -> builder.greaterThanOrEqualTo(root.get("createdAt"), fromDate);
     }
 
     private static Specification<Department> withStreetStartWith(String streetStartWith) {

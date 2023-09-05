@@ -33,7 +33,18 @@ public class Department {
 
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
+    @Builder.Default
     List<Address> addresses = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "employee_departments_detail",
+            joinColumns = @JoinColumn(name = "departments_id"),
+            inverseJoinColumns = @JoinColumn(name = "employee_id")
+    )
+    @ToString.Exclude
+    @Builder.Default
+    Set<Employee> employees = new HashSet<>();
 
     @CreatedDate
     OffsetDateTime createdAt;

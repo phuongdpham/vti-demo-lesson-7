@@ -22,6 +22,7 @@ public class DepartmentController {
     DepartmentService departmentService;
     DepartmentMapper mapper;
     AddressMapper addressMapper;
+    EmployeeMapper employeeMapper;
 
     @GetMapping
     public Page<DepartmentResp> findAll(@ModelAttribute DepartmentFilter filter,
@@ -74,6 +75,12 @@ public class DepartmentController {
     @PostMapping("{id}/addresses")
     public DepartmentResp addAddress(@PathVariable Long id, @RequestBody @Valid AddressReq req) {
         return departmentService.addAddress(id, addressMapper.toAddress(req))
+                .transform(mapper::toDepartmentResp);
+    }
+
+    @PostMapping("{id}/employees")
+    public DepartmentResp addEmployee(@PathVariable Long id, @RequestBody @Valid EmployeeDeptReq req) {
+        return departmentService.addEmployee(id, employeeMapper.toEmployee(req))
                 .transform(mapper::toDepartmentResp);
     }
 }

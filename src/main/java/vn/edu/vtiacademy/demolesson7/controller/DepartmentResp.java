@@ -12,6 +12,7 @@ public record DepartmentResp(
         String description,
         OffsetDateTime createdAt,
         OffsetDateTime updatedAt,
-        List<AddressResp> addresses
+        List<AddressResp> addresses,
+        Set<EmployeeResp> employees
 ) {
 }
