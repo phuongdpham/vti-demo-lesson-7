@@ -1,0 +1,1 @@
+alter table departments add column email varchar(255);

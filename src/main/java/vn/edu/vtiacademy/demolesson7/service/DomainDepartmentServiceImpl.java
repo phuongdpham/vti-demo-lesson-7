@@ -62,6 +62,10 @@ public class DomainDepartmentServiceImpl implements DepartmentService {
             existingDepartment.setDescription(model.getDescription());
         }
 
+        if (model.getEmail() != null) {
+            existingDepartment.setEmail(model.getEmail());
+        }
+
         return departmentRepository.save(existingDepartment);
     }
 
@@ -94,6 +98,11 @@ public class DomainDepartmentServiceImpl implements DepartmentService {
 
         employee.getDepartments().add(department);
 
+        return departmentRepository.save(department);
+    }
+
+    @Override
+    public Department save(Department department) {
         return departmentRepository.save(department);
     }
 }

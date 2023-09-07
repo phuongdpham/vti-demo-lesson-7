@@ -33,6 +33,8 @@ public class Department {
 
     String description;
 
+    String email;
+
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     @Builder.Default

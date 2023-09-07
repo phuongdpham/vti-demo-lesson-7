@@ -12,7 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import vn.edu.vtiacademy.demolesson7.controller.validation.DeptCreate;
+import vn.edu.vtiacademy.demolesson7.controller.validation.AddressInstanceMapper;
 import vn.edu.vtiacademy.demolesson7.service.DepartmentService;
 
 @RestController
@@ -61,9 +61,12 @@ public class DepartmentController {
     }
 
     @PatchMapping("{id}")
-    public DepartmentResp updateDepartment(@PathVariable @Positive Long id, @RequestBody DepartmentReq req) {
-        return mapper.toDepartment(req)
-                .transform(department -> departmentService.updateDepartment(id, department))
+    public DepartmentResp updateDepartment(@PathVariable @Positive Long id, @RequestBody DepartmentUpdateReq req) {
+        var existingDepartment = departmentService.findById(id);
+
+        mapper.updateDepartment(req, existingDepartment);
+
+        return existingDepartment.transform(departmentService::save)
                 .transform(mapper::toDepartmentResp);
 
 //        return departmentService.updateDepartment(id, mapper.toDepartment(req));
@@ -77,7 +80,7 @@ public class DepartmentController {
 
     @PostMapping("{id}/addresses")
     public DepartmentResp addAddress(@PathVariable Long id, @RequestBody @Valid AddressReq req) {
-        return departmentService.addAddress(id, addressMapper.toAddress(req))
+        return departmentService.addAddress(id, AddressInstanceMapper.INSTANCE.toAddress(req))
                 .transform(mapper::toDepartmentResp);
     }
 

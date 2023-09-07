@@ -34,7 +34,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ValidationErrorResp> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         var violations = ex.getBindingResult().getFieldErrors().stream()
-                .map(fieldError -> ValidationErrorResp.Violation.builder().fieldName(fieldError.getField()).message(fieldError.getDefaultMessage()).build())
+                .map(fieldError -> ValidationErrorResp.Violation.builder().fieldName(fieldError.getObjectName() + "." + fieldError.getField()).message(fieldError.getDefaultMessage()).build())
                 .toList();
 
         var error = new ValidationErrorResp(400, violations);

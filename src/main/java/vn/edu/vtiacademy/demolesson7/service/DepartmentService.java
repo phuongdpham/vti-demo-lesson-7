@@ -21,4 +21,6 @@ public interface DepartmentService {
     Department addAddress(Long id, Address address);
 
     Department addEmployee(Long id, Employee employee);
+
+    Department save(Department department);
 }
