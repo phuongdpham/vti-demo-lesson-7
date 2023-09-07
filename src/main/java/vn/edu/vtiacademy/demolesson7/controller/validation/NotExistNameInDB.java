@@ -16,7 +16,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE })
 @Retention(RUNTIME)
 public @interface NotExistNameInDB {
-    String message() default "Name already exists";
+    String message() default "{vn.edu.vtiacademy.validation.constraints.NotExistNameInDB.message}";
 
     Class<?>[] groups() default { };
 
