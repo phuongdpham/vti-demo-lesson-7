@@ -1,16 +1,18 @@
 package vn.edu.vtiacademy.demolesson7.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import vn.edu.vtiacademy.demolesson7.model.Department;
+import vn.edu.vtiacademy.demolesson7.controller.validation.DeptCreate;
 import vn.edu.vtiacademy.demolesson7.service.DepartmentService;
 
 @RestController
@@ -18,6 +20,7 @@ import vn.edu.vtiacademy.demolesson7.service.DepartmentService;
 @Slf4j
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Validated
 public class DepartmentController {
     DepartmentService departmentService;
     DepartmentMapper mapper;
@@ -25,8 +28,8 @@ public class DepartmentController {
     EmployeeMapper employeeMapper;
 
     @GetMapping
-    public Page<DepartmentResp> findAll(@ModelAttribute DepartmentFilter filter,
-                                        Pageable pageable) {
+    public Page<DepartmentResp> findAll(@ModelAttribute @ParameterObject DepartmentFilter filter,
+                                        @ParameterObject Pageable pageable) {
         return departmentService.findAll(filter, pageable)
                 .map(mapper::toDepartmentResp);
     }
@@ -58,7 +61,7 @@ public class DepartmentController {
     }
 
     @PatchMapping("{id}")
-    public DepartmentResp updateDepartment(@PathVariable Long id, @RequestBody DepartmentReq req) {
+    public DepartmentResp updateDepartment(@PathVariable @Positive Long id, @RequestBody DepartmentReq req) {
         return mapper.toDepartment(req)
                 .transform(department -> departmentService.updateDepartment(id, department))
                 .transform(mapper::toDepartmentResp);

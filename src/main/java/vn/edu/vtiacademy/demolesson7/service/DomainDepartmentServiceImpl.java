@@ -4,9 +4,11 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import vn.edu.vtiacademy.demolesson7.controller.DepartmentFilter;
 import vn.edu.vtiacademy.demolesson7.model.*;
 import vn.edu.vtiacademy.demolesson7.repository.DepartmentRepository;
@@ -24,12 +26,16 @@ public class DomainDepartmentServiceImpl implements DepartmentService {
 
     @Override
     public Department createDepartment(Department department) {
-        if (departmentRepository.existsByName(department.getName())) {
-            throw new DepartmentExistedException(
-                    HttpStatus.CONFLICT.value(),
-                    "C2",
-                    "Department with name=" + department.getName() + " already exists"
-            );
+//        if (departmentRepository.existsByName(department.getName())) {
+//            throw new DepartmentExistedException(
+//                    HttpStatus.CONFLICT.value(),
+//                    "C2",
+//                    "Department with name=" + department.getName() + " already exists"
+//            );
+//        }
+        if (CollectionUtils.isNotEmpty(department.getAddresses())) {
+            department.getAddresses()
+                    .forEach(address -> address.setDepartment(department));
         }
         return departmentRepository.save(department);
     }
@@ -65,6 +71,7 @@ public class DomainDepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
+    @Transactional
     public Department addAddress(Long id, Address address) {
         var department = findById(id);
 
@@ -72,10 +79,14 @@ public class DomainDepartmentServiceImpl implements DepartmentService {
 
         address.setDepartment(department);
 
+        // save another thing
+        // ..save()
+
         return departmentRepository.save(department);
     }
 
     @Override
+    @Transactional
     public Department addEmployee(Long id, Employee employee) {
         var department = findById(id);
 
