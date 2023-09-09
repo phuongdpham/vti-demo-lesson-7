@@ -7,6 +7,8 @@ import java.util.List;
 
 public record ValidationErrorResp(
         int status,
+        String code,
+        String message,
         List<Violation> violations
 ) {
     @Data

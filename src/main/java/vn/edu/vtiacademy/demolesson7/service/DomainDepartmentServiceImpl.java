@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import vn.edu.vtiacademy.demolesson7.controller.DepartmentFilter;
 import vn.edu.vtiacademy.demolesson7.model.*;
@@ -44,8 +43,7 @@ public class DomainDepartmentServiceImpl implements DepartmentService {
     public Department findById(Long id) {
         return departmentRepository.findById(id)
                 .orElseThrow(() -> new DepartmentNotFoundException(
-                        HttpStatus.NOT_FOUND.value(),
-                        "C1",
+                        ErrorCode.DEPARTMENT_NOT_FOUND,
                         "Department not found with given id=" + id)
                 );
     }
