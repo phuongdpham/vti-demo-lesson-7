@@ -12,6 +12,9 @@ public enum ErrorCode {
     DEPARTMENT_NOT_FOUND(404, "DEP-001", "Department not found"),
     DEPARTMENT_EXISTED(409, "DEP-002", "Department existed"),
     METHOD_ARGUMENT_NOT_VALID(400, "DEP-003", "Method argument not valid"),
+    ACCOUNT_NOT_FOUND(404, "ACC-001", "Account not found"),
+    UNAUTHORIZED(401, "ACC-002", "Unauthorized"),
+    FORBIDDEN(403, "ACC-003", "Forbidden"),
     ;
 
     int status;
