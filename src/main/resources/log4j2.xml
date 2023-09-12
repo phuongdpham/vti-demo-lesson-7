@@ -1,13 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration>
     <Appenders>
-        <Console name="Console">
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout
+                    pattern="%style{%d{ISO8601}}{white} %highlight{%-5level }[%style{%t}{bright,blue}] %style{%C{1.}}{bright,yellow}(%L): %msg%n%throwable"/>
         </Console>
+
+        <RollingFile name="RollingFile"
+                     fileName="./logs/department-api.log"
+                     filePattern="./logs/$${date:yyyy-MM}/department-api-%d{-dd-MMMM-yyyy}-%i.log.gz">
+            <PatternLayout>
+                <pattern>%d %p %C{1.} [%t] %m%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <!-- rollover on startup, daily and when the file reaches
+                    200 MegaBytes -->
+                <OnStartupTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy
+                        size="200 MB"/>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
     </Appenders>
+
     <Loggers>
-        <Root level="INFO">
+        <!-- LOG everything at INFO level -->
+        <Root level="info">
             <AppenderRef ref="Console"/>
+            <AppenderRef ref="RollingFile"/>
         </Root>
+
+        <!-- LOG "vn.edu.vtiacademy" at TRACE level -->
+        <Logger name="vn.edu.vtiacademy" level="trace"/>
     </Loggers>
+
 </Configuration>

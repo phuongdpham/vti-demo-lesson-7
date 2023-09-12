@@ -1,5 +1,6 @@
 package vn.edu.vtiacademy.demolesson7.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -9,6 +10,7 @@ import vn.edu.vtiacademy.demolesson7.model.*;
 import java.util.Optional;
 
 @ControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
     private ResponseEntity<ErrorResponse> buildResponseEntity(ErrorCodeException ex) {
@@ -21,11 +23,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ErrorCodeException.class)
     public ResponseEntity<ErrorResponse> handleDepartmentExistedException(ErrorCodeException ex) {
+        log.error("Has error: ", ex);
         return buildResponseEntity(ex);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ValidationErrorResp> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        log.error("Has error: ", ex);
+
         var violations = ex.getBindingResult().getFieldErrors().stream()
                 .map(fieldError -> ValidationErrorResp.Violation.builder().fieldName(fieldError.getObjectName() + "." + fieldError.getField()).message(fieldError.getDefaultMessage()).build())
                 .toList();

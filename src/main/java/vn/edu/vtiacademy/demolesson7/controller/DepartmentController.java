@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import vn.edu.vtiacademy.demolesson7.controller.validation.AddressInstanceMapper;
 import vn.edu.vtiacademy.demolesson7.service.DepartmentService;
 
+import java.security.Principal;
+
 @RestController
 @RequestMapping("/departments")
 @Slf4j
@@ -25,44 +27,39 @@ import vn.edu.vtiacademy.demolesson7.service.DepartmentService;
 public class DepartmentController {
     DepartmentService departmentService;
     DepartmentMapper mapper;
-    AddressMapper addressMapper;
     EmployeeMapper employeeMapper;
 
     @GetMapping
     public Page<DepartmentResp> findAll(@ModelAttribute @ParameterObject DepartmentFilter filter,
                                         @ParameterObject Pageable pageable) {
+        log.info("Find all departments with filter: {}, pageable: {}", filter, pageable);
         return departmentService.findAll(filter, pageable)
                 .map(mapper::toDepartmentResp);
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     public DepartmentResp createDepartment(@RequestBody @Valid DepartmentReq req) {
         return req.transform(mapper::toDepartment)
                 .transform(departmentService::createDepartment)
                 .transform(mapper::toDepartmentResp);
-//        var department = mapper.toDepartment(req);
-//
-//        var result = departmentService.createDepartment(department);
-//
-//        return mapper.toDepartmentResp(result);
     }
 
     @GetMapping("{id}")
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public DepartmentResp findById(@PathVariable Long id) {
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
+    public DepartmentResp findById(@PathVariable Long id, Principal principal) {
+        log.info("Find department by id: {}, username: {}", id, principal.getName());
+
         return departmentService.findById(id)
                 .transform(resp -> {
-                    log.info("Found department: {}", resp.getId());
+                    log.info("Found department: {}", resp);
                     return resp;
                 })
                 .transform(mapper::toDepartmentResp);
-
-//        var resp = departmentService.findById(id);
-//        log.info("Found department: {}", resp.getId());
-//        return mapper.toDepartmentResp(resp);
     }
 
     @PatchMapping("{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     public DepartmentResp updateDepartment(@PathVariable @Positive Long id, @RequestBody DepartmentUpdateReq req) {
         var existingDepartment = departmentService.findById(id);
 
@@ -75,18 +72,21 @@ public class DepartmentController {
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteDepartment(@PathVariable Long id) {
         departmentService.deleteDepartment(id);
     }
 
     @PostMapping("{id}/addresses")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     public DepartmentResp addAddress(@PathVariable Long id, @RequestBody @Valid AddressReq req) {
         return departmentService.addAddress(id, AddressInstanceMapper.INSTANCE.toAddress(req))
                 .transform(mapper::toDepartmentResp);
     }
 
     @PostMapping("{id}/employees")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     public DepartmentResp addEmployee(@PathVariable Long id, @RequestBody @Valid EmployeeDeptReq req) {
         return departmentService.addEmployee(id, employeeMapper.toEmployee(req))
                 .transform(mapper::toDepartmentResp);
