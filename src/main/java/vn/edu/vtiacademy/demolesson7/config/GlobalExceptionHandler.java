@@ -1,5 +1,6 @@
 package vn.edu.vtiacademy.demolesson7.config;
 
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -34,6 +35,19 @@ public class GlobalExceptionHandler {
 
         var violations = ex.getBindingResult().getFieldErrors().stream()
                 .map(fieldError -> ValidationErrorResp.Violation.builder().fieldName(fieldError.getObjectName() + "." + fieldError.getField()).message(fieldError.getDefaultMessage()).build())
+                .toList();
+
+        var errCode = ErrorCode.METHOD_ARGUMENT_NOT_VALID;
+        var error = new ValidationErrorResp(errCode.getStatus(), errCode.getCode(), errCode.getMessage(), violations);
+        return ResponseEntity.of(Optional.of(error));
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ValidationErrorResp> handleMethodArgumentNotValidException(ConstraintViolationException ex) {
+        log.error("Has error: ", ex);
+
+        var violations = ex.getConstraintViolations().stream()
+                .map(fieldError -> ValidationErrorResp.Violation.builder().fieldName(fieldError.getPropertyPath().toString()).message(fieldError.getMessage()).build())
                 .toList();
 
         var errCode = ErrorCode.METHOD_ARGUMENT_NOT_VALID;

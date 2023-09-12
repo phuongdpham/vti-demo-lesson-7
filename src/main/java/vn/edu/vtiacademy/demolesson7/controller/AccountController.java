@@ -12,8 +12,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.vtiacademy.demolesson7.controller.validation.AdminAccountReq;
+import vn.edu.vtiacademy.demolesson7.controller.validation.PageableCheck;
 import vn.edu.vtiacademy.demolesson7.model.AccountFilter;
 import vn.edu.vtiacademy.demolesson7.service.AccountService;
 
@@ -22,6 +24,7 @@ import vn.edu.vtiacademy.demolesson7.service.AccountService;
 @Slf4j
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Validated
 public class AccountController {
     AccountService service;
     AccountMapper mapper;
@@ -29,7 +32,7 @@ public class AccountController {
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
-    public Page<AccountResp> findAll(@ModelAttribute @ParameterObject AccountFilter filter, @ParameterObject Pageable pageable) {
+    public Page<AccountResp> findAll(@ModelAttribute @ParameterObject AccountFilter filter, @ParameterObject @PageableCheck Pageable pageable) {
         return service.findAll(filter, pageable)
                 .map(mapper::toAccountResp);
     }
