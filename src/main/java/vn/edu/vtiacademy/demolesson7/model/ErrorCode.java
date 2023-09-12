@@ -15,7 +15,8 @@ public enum ErrorCode {
     ACCOUNT_NOT_FOUND(404, "ACC-001", "Account not found"),
     UNAUTHORIZED(401, "ACC-002", "Unauthorized"),
     FORBIDDEN(403, "ACC-003", "Forbidden"),
-    ;
+    ACCOUNT_EXISTED(409, "ACC-004", "Account existed"),
+    INTERNAL_SERVER_ERROR(500, "SYS-001", "Internal server error");
 
     int status;
     String code;

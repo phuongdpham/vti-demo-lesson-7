@@ -43,7 +43,11 @@ public class Account implements UserDetails {
     @LastModifiedDate
     OffsetDateTime updatedAt;
 
+    @Builder.Default
+    boolean enable = true;
+
     public <R> R transform(Function<? super Account, ? extends R> func) {
+        Objects.requireNonNull(func);
         return func.apply(this);
     }
 
@@ -85,6 +89,6 @@ public class Account implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enable;
     }
 }

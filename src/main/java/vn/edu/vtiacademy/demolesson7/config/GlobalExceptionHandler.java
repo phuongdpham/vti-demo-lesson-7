@@ -2,6 +2,7 @@ package vn.edu.vtiacademy.demolesson7.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -38,5 +39,25 @@ public class GlobalExceptionHandler {
         var errCode = ErrorCode.METHOD_ARGUMENT_NOT_VALID;
         var error = new ValidationErrorResp(errCode.getStatus(), errCode.getCode(), errCode.getMessage(), violations);
         return ResponseEntity.of(Optional.of(error));
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException ex) {
+        log.error("Has error: ", ex);
+        var errCode = ErrorCode.FORBIDDEN;
+        var errorResponse = new ErrorResponse(errCode.getStatus(), errCode.getCode(), errCode.getMessage(), ex.getMessage());
+        return ResponseEntity
+                .status(errCode.getStatus())
+                .body(errorResponse);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleException(Exception ex) {
+        log.error("Has error: ", ex);
+        var errCode = ErrorCode.INTERNAL_SERVER_ERROR;
+        var errorResponse = new ErrorResponse(errCode.getStatus(), errCode.getCode(), errCode.getMessage(), ex.getMessage());
+        return ResponseEntity
+                .status(errCode.getStatus())
+                .body(errorResponse);
     }
 }
