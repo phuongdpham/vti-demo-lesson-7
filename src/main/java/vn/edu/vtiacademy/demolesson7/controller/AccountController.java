@@ -1,6 +1,7 @@
 package vn.edu.vtiacademy.demolesson7.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -12,12 +13,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.vtiacademy.demolesson7.controller.validation.AdminAccountReq;
 import vn.edu.vtiacademy.demolesson7.controller.validation.PageableCheck;
 import vn.edu.vtiacademy.demolesson7.model.AccountFilter;
 import vn.edu.vtiacademy.demolesson7.service.AccountService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/accounts")
@@ -84,6 +88,20 @@ public class AccountController {
                     a.setEnable(false);
                     return service.save(a);
                 });
+    }
+
+    @PostMapping("/disable-batch")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
+    public void delete(@RequestBody @NotEmpty List<Long> ids) {
+        ids.forEach(
+                id -> service.findById(id)
+                        .transform(a -> {
+                            a.setEnable(false);
+                            return service.save(a);
+                        })
+        );
     }
 
 }
