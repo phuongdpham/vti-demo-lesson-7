@@ -59,4 +59,9 @@ public class PgAccountRepositoryImpl implements AccountRepository {
     public void delete(Account account) {
         repository.delete(account);
     }
+
+    @Override
+    public boolean existsByUsername(String username) {
+        return repository.existsByUsername(username);
+    }
 }

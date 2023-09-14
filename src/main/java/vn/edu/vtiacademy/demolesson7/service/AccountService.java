@@ -19,4 +19,6 @@ public interface AccountService {
     Account findById(Long id);
 
     void delete(Account account);
+
+    boolean existsByUsername(String username);
 }

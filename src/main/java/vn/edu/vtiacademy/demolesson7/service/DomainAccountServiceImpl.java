@@ -6,10 +6,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import vn.edu.vtiacademy.demolesson7.model.Account;
-import vn.edu.vtiacademy.demolesson7.model.AccountFilter;
-import vn.edu.vtiacademy.demolesson7.model.AccountNotFoundException;
-import vn.edu.vtiacademy.demolesson7.model.ErrorCode;
+import vn.edu.vtiacademy.demolesson7.model.*;
 import vn.edu.vtiacademy.demolesson7.repository.AccountRepository;
 
 import java.util.Optional;
@@ -50,5 +47,15 @@ public class DomainAccountServiceImpl implements AccountService {
     @Override
     public void delete(Account account) {
         accountRepository.delete(account);
+    }
+
+    @Override
+    public boolean existsByUsername(String username) {
+        var result = accountRepository.existsByUsername(username);
+        if (result) {
+            throw new AccountExistedException(ErrorCode.ACCOUNT_EXISTED, "Username already exists");
+        }
+
+        return false;
     }
 }

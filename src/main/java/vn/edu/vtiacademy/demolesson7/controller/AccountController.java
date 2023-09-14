@@ -1,9 +1,9 @@
 package vn.edu.vtiacademy.demolesson7.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -102,6 +102,23 @@ public class AccountController {
                             return service.save(a);
                         })
         );
+    }
+
+    @GetMapping("/validate-username")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
+    public ValidateResult validateUsername(@RequestParam @NotBlank String username) {
+        var result = service.existsByUsername(username);
+        return ValidateResult.builder()
+                .valid(!result)
+                .build();
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ValidateResult {
+        boolean valid;
     }
 
 }

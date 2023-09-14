@@ -17,4 +17,6 @@ public interface AccountRepository {
     Optional<Account> findById(Long id);
 
     void delete(Account account);
+
+    boolean existsByUsername(String username);
 }
