@@ -33,6 +33,8 @@ public class ClientAccountController {
         var account = mapper.toAccount(req);
         account.setPassword(passwordEncoder.encode(req.password()));
         account.setRole(Role.USER);
+        account.setCreator(req.username());
+        account.setPassword(req.username());
         return mapper.toAccountResp(service.save(account));
     }
 

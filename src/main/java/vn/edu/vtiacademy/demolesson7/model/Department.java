@@ -59,6 +59,8 @@ public class Department {
     @JdbcTypeCode(SqlTypes.JSON)
     Metadata metadata;
 
+    //TODO: add creator and updater
+
     public <R> R transform(Function<? super Department, ? extends R> func) {
         return func.apply(this);
     }

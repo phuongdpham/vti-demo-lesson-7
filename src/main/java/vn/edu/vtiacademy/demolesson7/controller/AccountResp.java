@@ -11,5 +11,7 @@ public record AccountResp(
         Role role,
         OffsetDateTime createdAt,
         OffsetDateTime updatedAt,
-        boolean enable) {
+        boolean enable,
+        String creator,
+        String updater) {
 }
