@@ -41,7 +41,7 @@ public class DomainAccountServiceImpl implements AccountService {
     @Override
     public Account findById(Long id) {
         return accountRepository.findById(id)
-                .orElseThrow(() -> new AccountNotFoundException(ErrorCode.ACCOUNT_NOT_FOUND, "Account not found"));
+                .orElseThrow(() -> new AccountNotFoundException(ErrorCode.ACCOUNT_NOT_FOUND, "Account not found with given id: " + id));
     }
 
     @Override
